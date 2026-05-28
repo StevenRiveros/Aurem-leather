@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUREM LEATHER — Artesanía de Élite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Montserrat:wght@200;300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black:       #080808;
+      --deep:        #111111;
+      --panel:       #161616;
+      --gold:        #C9A84C;
+      --gold-light:  #E2C97E;
+      --gold-dark:   #8A6A1A;
+      --gold-shine:  #F5DFA0;
+      --ivory:       #F4EFE4;
+      --ivory-dark:  #DDD5C0;
+      --muted:       #888880;
+      --white:       #FAFAF8;
+      --radius:      2px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--ivory);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ─── GRAIN OVERLAY ─────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.35;
+    }
+
+    /* ─── CUSTOM SCROLLBAR ───────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-dark); }
+
+    /* ─── UTILITY ────────────────────────────────────── */
+    .gold { color: var(--gold); }
+    .section-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .divider {
+      width: 60px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 2rem auto;
+    }
+    .divider-left { margin: 1.5rem 0; }
+
+    /* FADE-IN */
+    .fade-in {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in.delay-1 { transition-delay: 0.15s; }
+    .fade-in.delay-2 { transition-delay: 0.3s; }
+    .fade-in.delay-3 { transition-delay: 0.45s; }
+    .fade-in.delay-4 { transition-delay: 0.6s; }
+
+    /* ─── NAVBAR ─────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.6rem 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.4s, padding 0.4s, backdrop-filter 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(8,8,8,0.92);
+      backdrop-filter: blur(12px);
+      padding: 1rem 4rem;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-logo span { font-style: italic; font-weight: 300; }
+    .nav-links {
+      display: flex; gap: 2.8rem; list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--ivory-dark); text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--black); background: var(--gold);
+      padding: 0.7rem 1.6rem; border: none; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; font-weight: 500;
+      transition: background 0.3s, letter-spacing 0.3s;
+    }
+    .nav-cta:hover { background: var(--gold-light); letter-spacing: 0.35em; }
+
+    /* ─── HERO ───────────────────────────────────────── */
+    #hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=1800&q=85&fit=crop');
+      background-size: cover; background-position: center 40%;
+      filter: brightness(0.22) saturate(0.6);
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(8,8,8,0.6) 0%, transparent 60%, rgba(8,8,8,0.8) 100%);
+    }
+    /* Art deco corner lines */
+    .hero-deco {
+      position: absolute; inset: 2.5rem;
+      border: 1px solid rgba(201,168,76,0.15);
+      pointer-events: none;
+    }
+    .hero-deco::before, .hero-deco::after {
+      content: '';
+      position: absolute;
+      border-color: var(--gold);
+      border-style: solid;
+    }
+    .hero-deco::before {
+      top: -1px; left: -1px;
+      width: 60px; height: 60px;
+      border-width: 2px 0 0 2px;
+    }
+    .hero-deco::after {
+      bottom: -1px; right: -1px;
+      width: 60px; height: 60px;
+      border-width: 0 2px 2px 0;
+    }
+    .hero-content {
+      position: relative; z-index: 1;
+      text-align: center; padding: 0 2rem;
+      max-width: 900px;
+    }
+    .hero-eyebrow {
+      font-size: 0.6rem; letter-spacing: 0.6em; text-transform: uppercase;
+      color: var(--gold); font-weight: 500;
+      margin-bottom: 2rem;
+      display: flex; align-items: center; justify-content: center; gap: 1.2rem;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; flex: 0 0 40px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+    .hero-eyebrow::after { background: linear-gradient(90deg, var(--gold), transparent); }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 10vw, 9rem);
+      font-weight: 300;
+      line-height: 0.92;
+      letter-spacing: 0.08em;
+      color: var(--ivory);
+      margin-bottom: 0.2em;
+    }
+    .hero-title em {
+      font-style: italic; font-weight: 300;
+      color: var(--gold-light);
+      display: block;
+    }
+    .hero-subtitle {
+      font-size: 0.75rem; letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--muted); margin: 2rem 0 3rem;
+    }
+    .hero-btns { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+      font-weight: 500; color: var(--black);
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      padding: 1.1rem 2.8rem; border: none; cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(201,168,76,0.35);
+    }
+    .btn-ghost {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+      font-weight: 400; color: var(--gold);
+      background: transparent; padding: 1.1rem 2.8rem;
+      border: 1px solid rgba(201,168,76,0.4); cursor: pointer;
+      text-decoration: none; display: inline-block;
+      transition: border-color 0.3s, color 0.3s, background 0.3s;
+    }
+    .btn-ghost:hover {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.05);
+      color: var(--gold-light);
+    }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      font-size: 0.58rem; letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 0.8rem;
+      animation: scrollPulse 2.5s ease-in-out infinite;
+    }
+    .hero-scroll::after {
+      content: ''; width: 1px; height: 40px;
+      background: linear-gradient(180deg, var(--gold), transparent);
+    }
+    @keyframes scrollPulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+    /* ─── SECTION BASE ───────────────────────────────── */
+    section { padding: 7rem 4rem; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+
+    /* ─── DATA / CURIOSIDADES ────────────────────────── */
+    #data { background: var(--deep); position: relative; overflow: hidden; }
+    #data::before {
+      content: 'AUREM';
+      position: absolute; top: -0.1em; left: -0.02em;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(8rem, 20vw, 18rem); font-weight: 700;
+      color: rgba(201,168,76,0.03);
+      letter-spacing: 0.1em; pointer-events: none; line-height: 1;
+      white-space: nowrap;
+    }
+    .data-header { text-align: center; margin-bottom: 5rem; }
+    .data-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 300; line-height: 1.1;
+      color: var(--ivory);
+    }
+    .data-title em { font-style: italic; color: var(--gold); }
+    .data-intro {
+      font-size: 0.8rem; line-height: 1.9; color: var(--muted);
+      max-width: 580px; margin: 1.5rem auto 0;
+    }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap: 2px; margin-bottom: 5rem;
+    }
+    .stat-card {
+      background: var(--panel);
+      padding: 3rem 2.5rem;
+      border: 1px solid rgba(201,168,76,0.08);
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .stat-card:hover { border-color: rgba(201,168,76,0.3); }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .stat-card:hover::before { opacity: 1; }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.8rem; font-weight: 300;
+      color: var(--gold); line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-number sup { font-size: 1.8rem; }
+    .stat-label {
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--ivory-dark); margin-bottom: 1rem; font-weight: 500;
+    }
+    .stat-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.7; }
+    .stat-source {
+      font-size: 0.6rem; color: var(--gold-dark); margin-top: 1rem;
+      letter-spacing: 0.1em; font-style: italic;
+    }
+    .insights-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+      align-items: center;
+    }
+    .insight-text h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 400; line-height: 1.2;
+      color: var(--ivory); margin-bottom: 1.5rem;
+    }
+    .insight-text h3 em { font-style: italic; color: var(--gold); }
+    .insight-text p {
+      font-size: 0.78rem; line-height: 2; color: var(--muted); margin-bottom: 1rem;
+    }
+    .insight-text cite {
+      font-size: 0.62rem; color: var(--gold-dark); font-style: italic;
+      display: block; margin-top: 0.5rem;
+    }
+    .insight-pullquote {
+      background: var(--panel);
+      border-left: 2px solid var(--gold);
+      padding: 3rem;
+    }
+    .insight-pullquote blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+      font-style: italic; font-weight: 300;
+      line-height: 1.4; color: var(--ivory);
+      margin-bottom: 1.5rem;
+    }
+    .insight-pullquote blockquote::before { content: '\201C'; color: var(--gold); }
+    .insight-pullquote blockquote::after  { content: '\201D'; color: var(--gold); }
+    .quote-attr { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); }
+
+    /* ─── PRODUCTS ───────────────────────────────────── */
+    #productos { background: var(--black); }
+    .products-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 4rem;
+    }
+    .products-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      font-weight: 300; line-height: 1; color: var(--ivory);
+    }
+    .products-header h2 em { font-style: italic; color: var(--gold); display: block; }
+    .products-header p {
+      font-size: 0.72rem; color: var(--muted); max-width: 280px;
+      line-height: 1.8; text-align: right; padding-bottom: 0.5rem;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .product-card {
+      background: var(--panel);
+      position: relative; overflow: hidden; cursor: pointer;
+      transition: transform 0.4s ease;
+    }
+    .product-card:hover { transform: translateY(-6px); z-index: 2; }
+    .product-card:hover .product-overlay { opacity: 1; }
+    .product-card:hover .product-img { transform: scale(1.06); }
+    .product-img-wrap { aspect-ratio: 3/4; overflow: hidden; position: relative; }
+    .product-img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s ease;
+      filter: brightness(0.85) saturate(0.9);
+    }
+    .product-badge {
+      position: absolute; top: 1.2rem; left: 1.2rem;
+      font-size: 0.55rem; letter-spacing: 0.3em; text-transform: uppercase;
+      background: var(--gold); color: var(--black);
+      padding: 0.4rem 0.8rem; font-weight: 600;
+    }
+    .product-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(8,8,8,0.9) 100%);
+      opacity: 0.4; transition: opacity 0.4s;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: 2rem;
+    }
+    .product-overlay button {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+      font-weight: 500; color: var(--black);
+      background: var(--gold); border: none; cursor: pointer;
+      padding: 0.9rem 2rem;
+      transform: translateY(10px); opacity: 0;
+      transition: transform 0.3s 0.05s, opacity 0.3s 0.05s;
+    }
+    .product-card:hover .product-overlay button { transform: translateY(0); opacity: 1; }
+    .product-info { padding: 1.8rem; }
+    .product-cat {
+      font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.5rem; font-weight: 500;
+    }
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 400;
+      color: var(--ivory); line-height: 1.2; margin-bottom: 0.4rem;
+    }
+    .product-desc { font-size: 0.7rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.2rem; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; }
+    .product-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 300; color: var(--gold);
+    }
+    .product-price sup { font-size: 0.9rem; font-weight: 400; }
+    .product-add {
+      font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); background: transparent;
+      border: 1px solid rgba(201,168,76,0.35); cursor: pointer;
+      padding: 0.6rem 1.2rem; font-family: 'Montserrat', sans-serif;
+      font-weight: 500; transition: all 0.3s;
+    }
+    .product-add:hover { background: var(--gold); color: var(--black); }
+
+    /* ─── QUALITY ────────────────────────────────────── */
+    #calidad { background: var(--deep); position: relative; }
+    .quality-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+    }
+    .quality-img-wrap {
+      position: relative;
+    }
+    .quality-img-main {
+      width: 100%; aspect-ratio: 4/5; object-fit: cover;
+      filter: brightness(0.75) saturate(0.8);
+    }
+    .quality-img-accent {
+      position: absolute; bottom: -3rem; right: -3rem;
+      width: 55%; aspect-ratio: 1; object-fit: cover;
+      border: 4px solid var(--deep);
+      filter: brightness(0.7) saturate(0.8);
+    }
+    .quality-deco-num {
+      position: absolute; top: -1.5rem; left: -1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 8rem; font-weight: 700; line-height: 1;
+      color: rgba(201,168,76,0.08);
+      pointer-events: none;
+    }
+    .quality-content { padding-top: 2rem; }
+    .quality-content h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-weight: 300; line-height: 1.1; color: var(--ivory);
+      margin-bottom: 1.5rem;
+    }
+    .quality-content h2 em { font-style: italic; color: var(--gold); }
+    .quality-content p {
+      font-size: 0.78rem; line-height: 2; color: var(--muted); margin-bottom: 1rem;
+    }
+    .quality-content cite {
+      font-size: 0.62rem; color: var(--gold-dark); font-style: italic; display: block; margin-bottom: 2rem;
+    }
+    .quality-pillars {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem;
+    }
+    .pillar {
+      border-top: 1px solid rgba(201,168,76,0.2); padding-top: 1.2rem;
+    }
+    .pillar-icon { font-size: 1.4rem; margin-bottom: 0.5rem; filter: sepia(1) saturate(2) hue-rotate(5deg); }
+    .pillar h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; color: var(--ivory); margin-bottom: 0.3rem;
+    }
+    .pillar p { font-size: 0.68rem; color: var(--muted); line-height: 1.7; }
+
+    /* ─── TESTIMONIALS ───────────────────────────────── */
+    #testimonios { background: var(--black); position: relative; overflow: hidden; }
+    #testimonios::after {
+      content: '';
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 1px; height: 100%;
+      background: linear-gradient(180deg, transparent, rgba(201,168,76,0.12), transparent);
+      pointer-events: none;
+    }
+    .testimonials-header { text-align: center; margin-bottom: 5rem; }
+    .testimonials-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem,5vw,4.5rem);
+      font-weight: 300; color: var(--ivory);
+    }
+    .testimonials-header h2 em { font-style: italic; color: var(--gold); }
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 2px;
+    }
+    .testi-card {
+      background: var(--panel); padding: 3rem 2.5rem;
+      border: 1px solid rgba(201,168,76,0.06);
+      position: relative; transition: border-color 0.3s;
+    }
+    .testi-card:hover { border-color: rgba(201,168,76,0.25); }
+    .testi-card::before {
+      font-family: 'Cormorant Garamond', serif;
+      content: '\201C';
+      position: absolute; top: 1.5rem; right: 2rem;
+      font-size: 5rem; color: rgba(201,168,76,0.12);
+      line-height: 1;
+    }
+    .testi-stars { color: var(--gold); font-size: 0.75rem; letter-spacing: 0.15em; margin-bottom: 1.5rem; }
+    .testi-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; font-style: italic; font-weight: 300;
+      line-height: 1.6; color: var(--ivory); margin-bottom: 2rem;
+    }
+    .testi-author { display: flex; align-items: center; gap: 1rem; }
+    .testi-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 600; color: var(--black);
+      flex-shrink: 0;
+    }
+    .testi-name {
+      font-size: 0.72rem; font-weight: 500; color: var(--ivory); letter-spacing: 0.1em;
+    }
+    .testi-role {
+      font-size: 0.62rem; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.2rem;
+    }
+    .testi-product {
+      font-size: 0.6rem; color: var(--muted); margin-top: 0.15rem; font-style: italic;
+    }
+
+    /* ─── NEWSLETTER ─────────────────────────────────── */
+    #newsletter {
+      background: var(--deep);
+      position: relative; overflow: hidden;
+    }
+    #newsletter::before {
+      content: '';
+      position: absolute; top: -50%; left: 20%;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .newsletter-inner {
+      max-width: 700px; margin: 0 auto; text-align: center;
+    }
+    .newsletter-inner h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 300; line-height: 1.1; color: var(--ivory);
+      margin-bottom: 1.5rem;
+    }
+    .newsletter-inner h2 em { font-style: italic; color: var(--gold); }
+    .newsletter-inner p {
+      font-size: 0.78rem; color: var(--muted); line-height: 1.9;
+      margin-bottom: 3rem; max-width: 480px; margin-left: auto; margin-right: auto;
+    }
+    .newsletter-form { display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+    .form-row { display: flex; gap: 1rem; width: 100%; max-width: 560px; }
+    .form-field { flex: 1; position: relative; }
+    .form-field input {
+      width: 100%; padding: 1.1rem 1.4rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--ivory); font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem; font-weight: 300; outline: none;
+      transition: border-color 0.3s;
+    }
+    .form-field input::placeholder { color: rgba(244,239,228,0.3); }
+    .form-field input:focus { border-color: var(--gold); }
+    .form-field input.error { border-color: #c0392b; }
+    .form-field .err-msg {
+      position: absolute; bottom: -1.4rem; left: 0;
+      font-size: 0.58rem; color: #e74c3c; letter-spacing: 0.05em;
+      display: none;
+    }
+    .form-field input.error + .err-msg { display: block; }
+    .form-full { width: 100%; max-width: 560px; }
+    .form-full input { width: 100%; }
+    .form-check {
+      display: flex; align-items: flex-start; gap: 0.8rem;
+      font-size: 0.65rem; color: var(--muted); cursor: pointer;
+      max-width: 560px; text-align: left;
+    }
+    .form-check input[type="checkbox"] {
+      width: 14px; height: 14px; flex-shrink: 0; margin-top: 0.1rem;
+      accent-color: var(--gold); cursor: pointer;
+    }
+    .form-check span a { color: var(--gold); text-decoration: none; }
+    .btn-submit {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+      font-weight: 500; color: var(--black);
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      padding: 1.2rem 3.5rem; border: none; cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s, letter-spacing 0.3s;
+      margin-top: 0.5rem;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 35px rgba(201,168,76,0.3);
+      letter-spacing: 0.42em;
+    }
+    .newsletter-perks {
+      display: flex; gap: 2.5rem; justify-content: center; margin-top: 3rem; flex-wrap: wrap;
+    }
+    .perk { display: flex; align-items: center; gap: 0.6rem; font-size: 0.65rem; color: var(--muted); }
+    .perk::before { content: '✦'; color: var(--gold); font-size: 0.5rem; }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--black); border-top: 1px solid rgba(201,168,76,0.12);
+      padding: 4rem 4rem 2rem;
+    }
+    .footer-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 600; letter-spacing: 0.3em;
+      color: var(--gold); margin-bottom: 1rem; display: block;
+    }
+    .footer-brand .logo em { font-style: italic; font-weight: 300; }
+    .footer-brand p { font-size: 0.72rem; color: var(--muted); line-height: 1.8; }
+    .footer-col h5 {
+      font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.5rem; font-weight: 500;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .footer-col ul a {
+      font-size: 0.7rem; color: var(--muted); text-decoration: none;
+      transition: color 0.3s; letter-spacing: 0.05em;
+    }
+    .footer-col ul a:hover { color: var(--gold); }
+    .footer-bottom {
+      max-width: 1200px; margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-bottom p { font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; }
+    .footer-bottom span { color: var(--gold-dark); }
+
+    /* ─── CART TOAST ─────────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 9000;
+      background: var(--panel);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-left: 3px solid var(--gold);
+      padding: 1.2rem 1.8rem;
+      display: flex; align-items: center; gap: 1rem;
+      transform: translateX(120%); opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s;
+      min-width: 280px; max-width: 360px;
+    }
+    #toast.show { transform: translateX(0); opacity: 1; }
+    .toast-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .toast-text strong {
+      display: block; font-size: 0.72rem; letter-spacing: 0.1em;
+      color: var(--ivory); font-weight: 500; margin-bottom: 0.2rem;
+    }
+    .toast-text span { font-size: 0.65rem; color: var(--muted); }
+    .toast-close {
+      margin-left: auto; background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 1rem; padding: 0.2rem; line-height: 1;
+      transition: color 0.3s;
+    }
+    .toast-close:hover { color: var(--gold); }
+
+    /* ─── SUCCESS MSG ────────────────────────────────── */
+    #form-success {
+      display: none; text-align: center; padding: 2rem;
+      border: 1px solid rgba(201,168,76,0.3);
+      background: rgba(201,168,76,0.05);
+    }
+    #form-success .success-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    #form-success h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 300; color: var(--ivory); margin-bottom: 0.5rem;
+    }
+    #form-success p { font-size: 0.72rem; color: var(--muted); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 1024px) {
+      section { padding: 5rem 2.5rem; }
+      nav { padding: 1.4rem 2.5rem; }
+      nav.scrolled { padding: 0.8rem 2.5rem; }
+      .nav-links { display: none; }
+      .products-grid { grid-template-columns: repeat(2,1fr); }
+      .quality-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .quality-img-accent { display: none; }
+      .insights-grid { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; gap: 2px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    }
+    @media (max-width: 680px) {
+      section { padding: 4rem 1.5rem; }
+      nav { padding: 1.2rem 1.5rem; }
+      nav.scrolled { padding: 0.7rem 1.5rem; }
+      .hero-deco { inset: 1rem; }
+      .products-grid { grid-template-columns: 1fr; }
+      .products-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .products-header p { text-align: left; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .form-row { flex-direction: column; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .quality-pillars { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ──────────────────────────────────────────── -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">AUREM <span>Leather</span></a>
+  <ul class="nav-links">
+    <li><a href="#data">La Marca</a></li>
+    <li><a href="#productos">Colección</a></li>
+    <li><a href="#calidad">Artesanía</a></li>
+    <li><a href="#testimonios">Clientes</a></li>
+    <li><a href="#newsletter">Contacto</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('productos').scrollIntoView({behavior:'smooth'})">
+    Ver Colección
+  </button>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-deco"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow fade-in">Maison de cuir — Fundada MMXII</p>
+    <h1 class="hero-title fade-in delay-1">
+      AUREM<em>Leather</em>
+    </h1>
+    <p class="hero-subtitle fade-in delay-2">Piel Noble · Artesanía sin Compromiso · Legado Perpetuo</p>
+    <div class="hero-btns fade-in delay-3">
+      <a href="#productos" class="btn-primary">Descubrir la Colección</a>
+      <a href="#calidad" class="btn-ghost">Nuestra Filosofía</a>
+    </div>
+  </div>
+  <div class="hero-scroll">Desplazar</div>
+</section>
+
+<!-- ─── DATA & CURIOSIDADES ───────────────────────────────── -->
+<section id="data">
+  <div class="section-inner">
+    <div class="data-header fade-in">
+      <span class="section-label">Inteligencia de Mercado</span>
+      <h2 class="data-title">El privilegio tiene<em>su propia economía</em></h2>
+      <p class="data-intro">
+        El lujo no es un capricho: es un sistema económico de USD trillones impulsado
+        por psicología, identidad social y escasez calibrada. Estos son los datos reales
+        detrás de quienes llevan Aurem.
+      </p>
+    </div>
+    <div class="divider fade-in"></div>
+
+    <div class="stats-grid">
+      <div class="stat-card fade-in">
+        <div class="stat-number" data-target="362" data-suffix="B">0</div>
+        <div class="stat-label">Mercado Global de Lujo 2023</div>
+        <div class="stat-desc">El mercado global de artículos de lujo personales superó los USD 362 mil millones, consolidando su crecimiento post-pandémico.</div>
+        <div class="stat-source">Fuente: Bain & Company, Luxury Study 2023</div>
+      </div>
+      <div class="stat-card fade-in delay-1">
+        <div class="stat-number" data-target="47" data-suffix="%">0</div>
+        <div class="stat-label">Riqueza en manos del 1%</div>
+        <div class="stat-desc">El 1% más rico de la población mundial concentra el 47% de la riqueza total del planeta. Es el consumidor objetivo del lujo genuino.</div>
+        <div class="stat-source">Fuente: Credit Suisse, Global Wealth Report 2023</div>
+      </div>
+      <div class="stat-card fade-in delay-2">
+        <div class="stat-number" data-target="3" data-suffix="x más">0</div>
+        <div class="stat-label">Disposición de pago por estatus</div>
+        <div class="stat-desc">Los consumidores premium pagan hasta 3 veces más por productos que comunican señales de estatus social reconocibles por su grupo de referencia.</div>
+        <div class="stat-source">Fuente: Harvard Business Review, "The Psychology of Luxury" 2022</div>
+      </div>
+      <div class="stat-card fade-in delay-3">
+        <div class="stat-number" data-target="73" data-suffix="%">0</div>
+        <div class="stat-label">Material como factor decisivo</div>
+        <div class="stat-desc">El 73% de compradores de lujo cita la calidad del material como el factor más determinante al adquirir un artículo de marroquinería premium.</div>
+        <div class="stat-source">Fuente: McKinsey & Company, "True Luxury Consumer" 2022</div>
+      </div>
+    </div>
+
+    <div class="insights-grid fade-in">
+      <div class="insight-text">
+        <span class="section-label">Psicología del Consumidor Premium</span>
+        <h3>No compran<em>objetos</em>. Compran posición social.</h3>
+        <p>
+          La investigación del Journal of Consumer Psychology (Dubois &amp; Duquesne, 1993;
+          actualizada por Han, Nunes &amp; Drèze, 2010) identifica dos tipos de señalización
+          de lujo: la señalización "bulliciosa" hacia pares socioeconómicamente inferiores
+          y la señalización "silenciosa" entre grupos de igual o mayor estatus. Aurem opera
+          en el segundo registro: quienes saben, reconocen.
+        </p>
+        <cite>— Journal of Consumer Research, Vol. 36, "Signaling Status with Luxury Goods", 2010</cite>
+        <p>
+          Adicionalmente, estudios de neuroimagen (Moll et al., 2006; Knutson et al., 2007)
+          demuestran que adquirir artículos de lujo activa los circuitos dopaminérgicos de
+          recompensa anticipatoria, no solo de satisfacción inmediata. La espera, la
+          exclusividad y la escasez son parte del producto.
+        </p>
+        <cite>— NeuroImage, "Reward, Exclusivity and the Brain", 2007</cite>
+      </div>
+      <div class="insight-pullquote fade-in delay-2">
+        <blockquote>
+          El consumidor de lujo moderno no busca ostentación, busca permanencia. Un objeto
+          que dure décadas es un argumento contra la obsolescencia programada del mundo.
+        </blockquote>
+        <span class="quote-attr">— Dr. Amelia Voss · Behavioral Economics, London School of Economics</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PRODUCTOS ──────────────────────────────────────────── -->
+<section id="productos">
+  <div class="section-inner">
+    <div class="products-header fade-in">
+      <h2>Colección<em>Aurem 2024</em></h2>
+      <p>Cada pieza es producida en lotes de 24 unidades. Cuero full-grain de curtido vegetal, costuras en hilo de seda encerado.</p>
+    </div>
+
+    <div class="products-grid">
+
+      <div class="product-card fade-in">
+        <div class="product-img-wrap">
+          <span class="product-badge">Nuevo</span>
+          <img class="product-img"
+               src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700&q=80&fit=crop"
+               alt="Cartera Ejecutiva Nocturne" loading="lazy">
+          <div class="product-overlay">
+            <button onclick="addToCart('Cartera Nocturne')">Agregar al Carrito</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-cat">Marroquinería · Full-Grain</p>
+          <h3 class="product-name">Cartera Nocturne</h3>
+          <p class="product-desc">Cuero negro de curtido vegetal, doce años de envejecimiento garantizado. Forro de ante charcoal.</p>
+          <div class="product-footer">
+            <span class="product-price"><sup>USD </sup>1,850</span>
+            <button class="product-add" onclick="addToCart('Cartera Nocturne')">+ Carrito</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-in delay-1">
+        <div class="product-img-wrap">
+          <img class="product-img"
+               src="https://images.unsplash.com/photo-1591561954557-26941169b49e?w=700&q=80&fit=crop"
+               alt="Billetera Slim Aurum" loading="lazy">
+          <div class="product-overlay">
+            <button onclick="addToCart('Billetera Aurum Slim')">Agregar al Carrito</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-cat">Billeteras · Slim Design</p>
+          <h3 class="product-name">Billetera Aurum Slim</h3>
+          <p class="product-desc">Perfil de 6mm. Cuero cognac con ribete dorado a mano. Capacidad 8 tarjetas + billetes.</p>
+          <div class="product-footer">
+            <span class="product-price"><sup>USD </sup>480</span>
+            <button class="product-add" onclick="addToCart('Billetera Aurum Slim')">+ Carrito</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-in delay-2">
+        <div class="product-img-wrap">
+          <span class="product-badge">Edición Limitada</span>
+          <img class="product-img"
+               src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700&q=80&fit=crop"
+               alt="Maletín Obsidian" loading="lazy">
+          <div class="product-overlay">
+            <button onclick="addToCart('Maletín Obsidian')">Agregar al Carrito</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-cat">Maletines · Artesanal</p>
+          <h3 class="product-name">Maletín Obsidian</h3>
+          <p class="product-desc">Estructura rígida en madera de cedro revestida en cuero negro italiano. Herraje de latón macizo.</p>
+          <div class="product-footer">
+            <span class="product-price"><sup>USD </sup>4,200</span>
+            <button class="product-add" onclick="addToCart('Maletín Obsidian')">+ Carrito</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-in">
+        <div class="product-img-wrap">
+          <img class="product-img"
+               src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=700&q=80&fit=crop"
+               alt="Tote Imperiale" loading="lazy">
+          <div class="product-overlay">
+            <button onclick="addToCart('Tote Imperiale')">Agregar al Carrito</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-cat">Carteras Tote · Donna</p>
+          <h3 class="product-name">Tote Imperiale</h3>
+          <p class="product-desc">Cuero de becerro color marfil. Costura a dos agujas. Interior de gamuza beige con bolsillos de acceso rápido.</p>
+          <div class="product-footer">
+            <span class="product-price"><sup>USD </sup>2,640</span>
+            <button class="product-add" onclick="addToCart('Tote Imperiale')">+ Carrito</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-in delay-1">
+        <div class="product-img-wrap">
+          <img class="product-img"
+               src="https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=700&q=80&fit=crop"
+               alt="Cinturón Aurum" loading="lazy">
+          <div class="product-overlay">
+            <button onclick="addToCart('Cinturón Aurum')">Agregar al Carrito</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-cat">Cinturones · Full-Grain</p>
+          <h3 class="product-name">Cinturón Aurum I</h3>
+          <p class="product-desc">35mm de ancho, cuero de vachetta envejecido. Hebilla de latón bañado en oro 18k. Ajuste de precisión.</p>
+          <div class="product-footer">
+            <span class="product-price"><sup>USD </sup>320</span>
+            <button class="product-add" onclick="addToCart('Cinturón Aurum')">+ Carrito</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card fade-in delay-2">
+        <div class="product-img-wrap">
+          <span class="product-badge">Bestseller</span>
+          <img class="product-img"
+               src="https://images.unsplash.com/photo-1547949003-9792a18a2601?w=700&q=80&fit=crop"
+               alt="Crossbody Noir Soir" loading="lazy">
+          <div class="product-overlay">
+            <button onclick="addToCart('Crossbody Noir Soir')">Agregar al Carrito</button>
+          </div>
+        </div>
+        <div class="product-info">
+          <p class="product-cat">Crossbody · Soirée</p>
+          <h3 class="product-name">Crossbody Noir Soir</h3>
+          <p class="product-desc">Cuero pebbled negro con cadena dorada intercambiable. Cierre magnético oculto. Piezas numeradas.</p>
+          <div class="product-footer">
+            <span class="product-price"><sup>USD </sup>1,120</span>
+            <button class="product-add" onclick="addToCart('Crossbody Noir Soir')">+ Carrito</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── CALIDAD ────────────────────────────────────────────── -->
+<section id="calidad">
+  <div class="section-inner">
+    <div class="quality-grid">
+      <div class="quality-img-wrap fade-in">
+        <div class="quality-deco-num">A</div>
+        <img class="quality-img-main"
+             src="https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=800&q=85&fit=crop"
+             alt="Artesano trabajando cuero" loading="lazy">
+        <img class="quality-img-accent"
+             src="https://images.unsplash.com/photo-1473654729523-203e25dfda10?w=500&q=80&fit=crop"
+             alt="Detalle costura cuero" loading="lazy">
+      </div>
+      <div class="quality-content fade-in delay-2">
+        <span class="section-label">Filosofía de Manufactura</span>
+        <h2>Cada puntada es<em>una declaración</em>de intención</h2>
+        <p>
+          Trabajamos exclusivamente con cuero full-grain de curtido vegetal, el proceso de
+          curtido más antiguo y noble. A diferencia del cuero corrected-grain o bonded,
+          el full-grain retiene la superficie original del animal, con sus imperfecciones
+          naturales que se convierten en firmas únicas de cada pieza.
+        </p>
+        <p>
+          Según la Leather Industries of America, el cuero full-grain de primera calidad,
+          con cuidado apropiado, puede preservar su integridad estructural por más de
+          <strong style="color:var(--gold)">50 años</strong>, convirtiéndose en objeto de herencia y no en artículo de consumo.
+        </p>
+        <cite>— Leather Industries of America, "Hide Quality Standards", 2021</cite>
+        <p>
+          Cada artículo Aurem requiere entre 18 y 40 horas de manufactura manual en nuestro
+          atelier de Florencia. Nuestros artesanos son herederos de la tradición cuoieria
+          toscana, certificados bajo el consorcio <em>Vera Pelle Italiana Conciata al
+          Vegetale</em>.
+        </p>
+        <div class="quality-pillars">
+          <div class="pillar fade-in">
+            <div class="pillar-icon">🌿</div>
+            <h4>Curtido Vegetal</h4>
+            <p>Sin cromo. Proceso de 60 días en tinas de roble con extractos de mimosa y quebracho.</p>
+          </div>
+          <div class="pillar fade-in delay-1">
+            <div class="pillar-icon">🪡</div>
+            <h4>Costura Saddle-Stitch</h4>
+            <p>Técnica de costura a dos agujas. Si un hilo se rompe, el otro mantiene la estructura intacta.</p>
+          </div>
+          <div class="pillar fade-in delay-2">
+            <div class="pillar-icon">🔱</div>
+            <h4>Herraje de Latón</h4>
+            <p>Todo el metal es latón macizo torneado a mano. Sin zinc, sin aleaciones de baja densidad.</p>
+          </div>
+          <div class="pillar fade-in delay-3">
+            <div class="pillar-icon">📋</div>
+            <h4>Numeración Individual</h4>
+            <p>Cada pieza lleva su número de serie grabado en la piel interna. Trazabilidad completa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TESTIMONIOS ────────────────────────────────────────── -->
+<section id="testimonios">
+  <div class="section-inner">
+    <div class="testimonials-header fade-in">
+      <span class="section-label">Voces de la Clientela</span>
+      <h2>Lo que dicen quienes<em>ya eligieron</em></h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testi-card fade-in">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">
+          Compré la Cartera Nocturne hace tres años. Con uso diario intenso, el cuero ha desarrollado una pátina que ninguna foto puede capturar. Es la única pieza que la gente siempre comenta sin que yo diga nada.
+        </p>
+        <div class="testi-author">
+          <div class="testi-avatar">R</div>
+          <div>
+            <p class="testi-name">Rodrigo Echeverría</p>
+            <p class="testi-role">Director de Inversiones · Santiago</p>
+            <p class="testi-product">Cartera Nocturne — hace 3 años</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card fade-in delay-1">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">
+          He tenido bolsos de las grandes casas europeas. El Tote Imperiale de Aurem no pide disculpas: el cuero es más grueso, las costuras más precisas y la estructura más honesta. No hay marca visible. No la necesita.
+        </p>
+        <div class="testi-author">
+          <div class="testi-avatar">I</div>
+          <div>
+            <p class="testi-name">Isabelle Fontaine-Morel</p>
+            <p class="testi-role">Arquitecta · París</p>
+            <p class="testi-product">Tote Imperiale — hace 14 meses</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card fade-in delay-2">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">
+          El Maletín Obsidian llegó en una caja de cedro con nota manuscrita del artesano. Usarlo en reuniones de directorio no es ostentación; es señal de que entiendes la diferencia entre precio y valor.
+        </p>
+        <div class="testi-author">
+          <div class="testi-avatar">M</div>
+          <div>
+            <p class="testi-name">Marco Andrade Souza</p>
+            <p class="testi-role">CEO, Andrade Capital · São Paulo</p>
+            <p class="testi-product">Maletín Obsidian — hace 8 meses</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── NEWSLETTER ─────────────────────────────────────────── -->
+<section id="newsletter">
+  <div class="section-inner">
+    <div class="newsletter-inner">
+      <span class="section-label fade-in" style="display:block;text-align:center">Acceso Prioritario</span>
+      <h2 class="fade-in delay-1">Únete al<em>círculo Aurem</em></h2>
+      <p class="fade-in delay-2">
+        Recibe acceso anticipado a nuevas colecciones, invitaciones a presentaciones privadas
+        y el diario de atelier: notas del maestro artesano sobre cada pieza en producción.
+        Sin spam. Sin descuentos masivos. Solo exclusividad real.
+      </p>
+
+      <div id="newsletter-form-wrap" class="fade-in delay-3">
+        <form class="newsletter-form" id="newsletterForm" novalidate>
+          <div class="form-row">
+            <div class="form-field">
+              <input type="text" id="fname" placeholder="Nombre" autocomplete="given-name">
+              <span class="err-msg">Campo requerido</span>
+            </div>
+            <div class="form-field">
+              <input type="text" id="lname" placeholder="Apellido" autocomplete="family-name">
+              <span class="err-msg">Campo requerido</span>
+            </div>
+          </div>
+          <div class="form-full">
+            <div class="form-field">
+              <input type="email" id="email" placeholder="Correo electrónico" autocomplete="email">
+              <span class="err-msg">Email válido requerido</span>
+            </div>
+          </div>
+          <label class="form-check">
+            <input type="checkbox" id="privacy">
+            <span>Acepto los <a href="#">términos de privacidad</a> y confirmo que entiendo
+            que recibiré comunicaciones exclusivas de Aurem Leather.</span>
+          </label>
+          <button type="submit" class="btn-submit">Solicitar Acceso</button>
+        </form>
+      </div>
+
+      <div id="form-success" class="fade-in">
+        <div class="success-icon">✦</div>
+        <h3>Bienvenido al Círculo</h3>
+        <p>Tu solicitud ha sido recibida. Recibirás una confirmación personalizada en las próximas 24 horas.</p>
+      </div>
+
+      <div class="newsletter-perks fade-in delay-4">
+        <div class="perk">Acceso anticipado a colecciones</div>
+        <div class="perk">Invitaciones a ateliers privados</div>
+        <div class="perk">Diario del maestro artesano</div>
+        <div class="perk">Sin spam garantizado</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="logo">AUREM <em>Leather</em></span>
+      <p>Maison de marroquinería fundada en 2012. Atelier en Florencia, Italia. Piezas numeradas, producción limitada, herencia garantizada.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Colección</h5>
+      <ul>
+        <li><a href="#productos">Carteras</a></li>
+        <li><a href="#productos">Maletines</a></li>
+        <li><a href="#productos">Billeteras</a></li>
+        <li><a href="#productos">Cinturones</a></li>
+        <li><a href="#productos">Ediciones Especiales</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Atelier</h5>
+      <ul>
+        <li><a href="#calidad">Nuestra Filosofía</a></li>
+        <li><a href="#calidad">Proceso de Manufactura</a></li>
+        <li><a href="#calidad">Materiales</a></li>
+        <li><a href="#testimonios">Clientes</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Contacto</h5>
+      <ul>
+        <li><a href="mailto:atelier@auremleather.com">atelier@auremleather.com</a></li>
+        <li><a href="#">Via dei Servi, 12 — Florencia</a></li>
+        <li><a href="#">Citas privadas</a></li>
+        <li><a href="#">Bespoke & encargos</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 Aurem Leather S.r.l. — <span>Tutti i diritti riservati</span></p>
+    <p style="font-style:italic;color:var(--gold-dark)">Prodotto con amore artigianale · Florencia, Italia</p>
+  </div>
+</footer>
+
+<!-- ─── CART TOAST ─────────────────────────────────────────── -->
+<div id="toast">
+  <span class="toast-icon">🛒</span>
+  <div class="toast-text">
+    <strong id="toast-title">Añadido al carrito</strong>
+    <span id="toast-body">Se reservará por 15 minutos</span>
+  </div>
+  <button class="toast-close" onclick="closeToast()">×</button>
+</div>
+
+<!-- ─── JAVASCRIPT ──────────────────────────────────────────── -->
+<script>
+  /* ── NAVBAR SCROLL ─────────────────────────── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  /* ── FADE-IN ON SCROLL ─────────────────────── */
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        fadeObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  fadeEls.forEach(el => fadeObserver.observe(el));
+
+  /* ── ANIMATED COUNTERS ─────────────────────── */
+  function animateCounter(el) {
+    const target    = parseInt(el.dataset.target, 10);
+    const suffix    = el.dataset.suffix || '';
+    const duration  = 2000;
+    const frameRate = 60;
+    const steps     = Math.round(duration / (1000 / frameRate));
+    let   current   = 0;
+
+    const easeOut = t => 1 - Math.pow(1 - t, 3);
+
+    const tick = (step) => {
+      const progress = easeOut(step / steps);
+      current = Math.round(progress * target);
+      el.textContent = current + suffix;
+      if (step < steps) requestAnimationFrame(() => tick(step + 1));
+      else el.textContent = target + suffix;
+    };
+    tick(0);
+  }
+
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCounter(e.target);
+        counterObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.stat-number[data-target]')
+    .forEach(el => counterObserver.observe(el));
+
+  /* ── CART TOAST ────────────────────────────── */
+  let toastTimer = null;
+
+  function addToCart(productName) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toast-title').textContent = productName + ' añadido';
+    document.getElementById('toast-body').textContent  = 'Reservado por 15 minutos · Stock limitado';
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 4500);
+  }
+
+  function closeToast() {
+    document.getElementById('toast').classList.remove('show');
+    clearTimeout(toastTimer);
+  }
+
+  /* ── NEWSLETTER FORM VALIDATION ────────────── */
+  document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    const fname   = document.getElementById('fname');
+    const lname   = document.getElementById('lname');
+    const email   = document.getElementById('email');
+    const privacy = document.getElementById('privacy');
+    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Reset
+    [fname, lname, email].forEach(f => f.classList.remove('error'));
+
+    if (!fname.value.trim()) { fname.classList.add('error');  valid = false; }
+    if (!lname.value.trim()) { lname.classList.add('error');  valid = false; }
+    if (!emailRx.test(email.value.trim())) { email.classList.add('error'); valid = false; }
+
+    if (!privacy.checked) {
+      privacy.style.outline = '2px solid #e74c3c';
+      setTimeout(() => privacy.style.outline = '', 2000);
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    // Simulate submission
+    document.getElementById('newsletterForm').style.display = 'none';
+    const success = document.getElementById('form-success');
+    success.style.display = 'block';
+    setTimeout(() => success.classList.add('visible'), 50);
+  });
+
+  // Remove error state on input
+  ['fname','lname','email'].forEach(id => {
+    document.getElementById(id).addEventListener('input', function() {
+      this.classList.remove('error');
+    });
+  });
+
+  /* ── HERO PARALLAX (subtle) ────────────────── */
+  const heroBg = document.querySelector('.hero-bg');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY < window.innerHeight * 1.5) {
+      heroBg.style.transform = `translateY(${window.scrollY * 0.25}px)`;
+    }
+  }, { passive: true });
+
+  /* ── INITIAL FADE: hero content ───────────── */
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#hero .fade-in').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), 300 + i * 200);
+    });
+  });
+</script>
+</body>
+</html>
